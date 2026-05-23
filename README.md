@@ -7,7 +7,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white)]()
 [![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black)]()
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?logo=postgresql&logoColor=white)]()
-[![CI](https://github.com/devsquad/academia/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![CI](https://github.com/f0l0d653/sistema_academia/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
 <p>
   <a href="#português">🇧🇷 Português</a> &nbsp;|&nbsp;
@@ -15,6 +15,10 @@
 </p>
 
 </div>
+
+<!-- LAST_UPDATE_START -->
+> 🕐 **Última atualização:** — *(atualizado automaticamente pelo GitHub Actions a cada push)*
+<!-- LAST_UPDATE_END -->
 
 ---
 
@@ -36,6 +40,8 @@ Sistema de gestão de academias com controle financeiro, automação de inadimpl
 - [Como Contribuir](#como-contribuir)
 - [Licença](#licença)
 
+> 📐 **Guia completo de estrutura de pastas, regras e anti-padrões:** [`docs/ESTRUTURA_DE_PASTAS.md`](docs/ESTRUTURA_DE_PASTAS.md)
+
 ---
 
 ### Sobre o Projeto
@@ -52,7 +58,9 @@ O **Academia DevSquad** é um sistema web completo para gestão de academias, de
 ---
 
 ### Funcionalidades
+
 <!--✅-->
+
 #### 🔜 Autenticação e Segurança
 - Login com JWT
 - Rotas protegidas por middleware
@@ -110,7 +118,7 @@ O **Academia DevSquad** é um sistema web completo para gestão de academias, de
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/gustavo8000br/sistema_academia.git
+git clone https://github.com/devsquad/academia.git
 cd academia
 
 # 2. Instale as dependências
@@ -151,36 +159,78 @@ Acesse `http://localhost:3000/status` para verificar se a API está saudável.
 
 ### Estrutura do Projeto
 
+O projeto é um **monorepo** com dois pacotes independentes. A raiz contém apenas configurações e scripts que orquestram os dois juntos.
+
 ```
-academia/
+academia/                            ← raiz do repositório
+├── client/                          ← Frontend (React)
+├── server/                          ← Backend (Node.js + Express)
 ├── .github/
 │   └── workflows/
-│       └── ci.yml              # Pipeline de CI/CD
-├── prisma/
-│   ├── schema.prisma           # Modelagem do banco de dados
-│   └── seed.js                 # Dados iniciais
-├── src/
-│   ├── app.js                  # Configuração do Express
-│   ├── server.js               # Inicialização do servidor
-│   ├── lib/
-│   │   └── prisma.js           # Instância do Prisma Client
-│   ├── middlewares/
-│   │   └── auth.js             # Middleware JWT
-│   └── routes/
-│       ├── status.js           # GET /status
-│       └── v1/                 # API versão 1
-│           ├── index.js
-│           ├── auth.js
-│           ├── clientes.js
-│           ├── planos.js
-│           ├── pagamentos.js
-│           ├── caixas.js
-│           └── inadimplencia.js
-├── .env.example
+│       └── ci.yml                   ← Pipeline de CI/CD
 ├── .gitignore
+├── README.md
 ├── CONTRIBUTING.md
+└── package.json                     ← Scripts de conveniência (npm run dev sobe os dois)
+```
+
+#### 🖥️ client/ — Frontend
+
+```
+client/
+├── src/
+│   ├── assets/                      ← Imagens, ícones, fontes
+│   ├── components/
+│   │   ├── ui/                      ← Button, Input, Modal, Table (sem lógica de API)
+│   │   └── layout/                  ← Sidebar, Header, PageShell
+│   ├── pages/                       ← Uma pasta por módulo; cada arquivo = uma rota
+│   │   ├── auth/         Login.jsx
+│   │   ├── dashboard/    Dashboard.jsx
+│   │   ├── clientes/     ClientesLista.jsx  ClientesForm.jsx
+│   │   ├── planos/       PlanosLista.jsx    PlanosForm.jsx
+│   │   ├── financeiro/   Pagamentos.jsx     FluxoCaixa.jsx
+│   │   └── inadimplencia/Inadimplencia.jsx
+│   ├── hooks/                       ← useAuth.js  useClientes.js  useCaixa.js
+│   ├── services/                    ← api.js  authService.js  clientesService.js ...
+│   ├── contexts/                    ← AuthContext.jsx
+│   ├── utils/                       ← formatters.js  validators.js
+│   ├── routes/                      ← AppRoutes.jsx  PrivateRoute.jsx
+│   ├── App.jsx
+│   └── main.jsx
 └── package.json
 ```
+
+> **Regra:** `services/` só faz a chamada HTTP. `hooks/` usa o service e gerencia estado. Páginas importam hooks, nunca services diretamente.
+
+#### ⚙️ server/ — Backend
+
+```
+server/
+├── src/
+│   ├── controllers/                 ← Recebe req → chama Prisma → retorna res
+│   │   ├── authController.js
+│   │   ├── clientesController.js
+│   │   ├── planosController.js
+│   │   ├── pagamentosController.js
+│   │   ├── caixasController.js
+│   │   └── inadimplenciaController.js
+│   ├── services/                    ← Regras de negócio (sem Express, sem req/res)
+│   ├── routes/
+│   │   ├── status.js                ← GET /status (fora do versionamento)
+│   │   └── v1/                      ← index.js + um arquivo por módulo
+│   ├── middlewares/                 ← auth.js (JWT)  asyncHandler.js
+│   ├── lib/                         ← prisma.js (singleton)
+│   ├── jobs/                        ← verificarInadimplencia.js (cron 00h)
+│   ├── app.js
+│   └── server.js
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.js
+├── __tests__/                       ← Testes de integração (precisam do banco)
+└── package.json
+```
+
+> Guia completo com regras, anti-padrões e fluxo para novos módulos: [`docs/ESTRUTURA_DE_PASTAS.md`](docs/ESTRUTURA_DE_PASTAS.md)
 
 ---
 
@@ -294,9 +344,13 @@ Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações
 
 ---
 
-<div align="center">
-  Desenvolvido com 💙 pelo <strong>DevSquad</strong>
-</div>
+### 👥 Contributors
+
+<!-- CONTRIBUTORS_START -->
+*(lista atualizada automaticamente pelo GitHub Actions)*
+<!-- CONTRIBUTORS_END -->
+
+---
 
 </div>
 
@@ -320,6 +374,8 @@ A gym management system with financial control, automated delinquency handling a
 - [Contributing](#contributing)
 - [License](#license-1)
 
+> 📐 **Full folder structure guide, rules and anti-patterns:** [`docs/ESTRUTURA_DE_PASTAS.md`](docs/ESTRUTURA_DE_PASTAS.md)
+
 ---
 
 ### About
@@ -336,6 +392,8 @@ A gym management system with financial control, automated delinquency handling a
 ---
 
 ### Features
+
+<!--✅-->
 
 #### 🔜 Authentication & Security
 - JWT-based login
@@ -394,7 +452,7 @@ A gym management system with financial control, automated delinquency handling a
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/gustavo8000br/sistema_academia.git
+git clone https://github.com/devsquad/academia.git
 cd academia
 
 # 2. Install dependencies
@@ -435,36 +493,78 @@ Visit `http://localhost:3000/status` to check the API health.
 
 ### Project Structure
 
+The project is a **monorepo** with two independent packages. The root only holds configs and scripts that orchestrate both together.
+
 ```
-academia/
+academia/                            ← repository root
+├── client/                          ← Frontend (React)
+├── server/                          ← Backend (Node.js + Express)
 ├── .github/
 │   └── workflows/
-│       └── ci.yml              # CI/CD pipeline
-├── prisma/
-│   ├── schema.prisma           # Database schema
-│   └── seed.js                 # Initial data
-├── src/
-│   ├── app.js                  # Express configuration
-│   ├── server.js               # Server entry point
-│   ├── lib/
-│   │   └── prisma.js           # Prisma Client singleton
-│   ├── middlewares/
-│   │   └── auth.js             # JWT middleware
-│   └── routes/
-│       ├── status.js           # GET /status
-│       └── v1/                 # API version 1
-│           ├── index.js
-│           ├── auth.js
-│           ├── clientes.js
-│           ├── planos.js
-│           ├── pagamentos.js
-│           ├── caixas.js
-│           └── inadimplencia.js
-├── .env.example
+│       └── ci.yml                   ← CI/CD pipeline
 ├── .gitignore
+├── README.md
 ├── CONTRIBUTING.md
+└── package.json                     ← Convenience scripts (npm run dev starts both)
+```
+
+#### 🖥️ client/ — Frontend
+
+```
+client/
+├── src/
+│   ├── assets/                      ← Images, icons, fonts
+│   ├── components/
+│   │   ├── ui/                      ← Button, Input, Modal, Table (no API logic)
+│   │   └── layout/                  ← Sidebar, Header, PageShell
+│   ├── pages/                       ← One folder per module; each file = one route
+│   │   ├── auth/         Login.jsx
+│   │   ├── dashboard/    Dashboard.jsx
+│   │   ├── clientes/     ClientesLista.jsx  ClientesForm.jsx
+│   │   ├── planos/       PlanosLista.jsx    PlanosForm.jsx
+│   │   ├── financeiro/   Pagamentos.jsx     FluxoCaixa.jsx
+│   │   └── inadimplencia/Inadimplencia.jsx
+│   ├── hooks/                       ← useAuth.js  useClientes.js  useCaixa.js
+│   ├── services/                    ← api.js  authService.js  clientesService.js ...
+│   ├── contexts/                    ← AuthContext.jsx
+│   ├── utils/                       ← formatters.js  validators.js
+│   ├── routes/                      ← AppRoutes.jsx  PrivateRoute.jsx
+│   ├── App.jsx
+│   └── main.jsx
 └── package.json
 ```
+
+> **Rule:** `services/` only makes HTTP calls. `hooks/` uses the service and manages state. Pages import hooks, never services directly.
+
+#### ⚙️ server/ — Backend
+
+```
+server/
+├── src/
+│   ├── controllers/                 ← Receives req → calls Prisma → returns res
+│   │   ├── authController.js
+│   │   ├── clientesController.js
+│   │   ├── planosController.js
+│   │   ├── pagamentosController.js
+│   │   ├── caixasController.js
+│   │   └── inadimplenciaController.js
+│   ├── services/                    ← Business logic (no Express, no req/res)
+│   ├── routes/
+│   │   ├── status.js                ← GET /status (outside versioning)
+│   │   └── v1/                      ← index.js + one file per module
+│   ├── middlewares/                 ← auth.js (JWT)  asyncHandler.js
+│   ├── lib/                         ← prisma.js (singleton)
+│   ├── jobs/                        ← verificarInadimplencia.js (cron 00h)
+│   ├── app.js
+│   └── server.js
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.js
+├── __tests__/                       ← Integration tests (require real database)
+└── package.json
+```
+
+> Full guide with rules, anti-patterns and workflow for new modules: [`docs/ESTRUTURA_DE_PASTAS.md`](docs/ESTRUTURA_DE_PASTAS.md)
 
 ---
 
@@ -577,9 +677,5 @@ We use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `f
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
-
-<div align="center">
-  Built with 💙 by <strong>DevSquad</strong>
-</div>
 
 </div>

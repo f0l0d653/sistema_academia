@@ -118,8 +118,8 @@ O **Academia DevSquad** é um sistema web completo para gestão de academias, de
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/devsquad/academia.git
-cd academia
+git clone https://github.com/f0l0d653/sistema_academia.git
+cd sistema_academia
 
 # 2. Instale as dependências
 npm install
@@ -452,8 +452,8 @@ A gym management system with financial control, automated delinquency handling a
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/devsquad/academia.git
-cd academia
+git clone https://github.com/f0l0d653/sistema_academia.git
+cd sistema_academia
 
 # 2. Install dependencies
 npm install

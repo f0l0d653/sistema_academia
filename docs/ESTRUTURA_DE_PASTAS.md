@@ -11,7 +11,7 @@ Este documento define a organização de pastas do projeto e serve como **refer�
 O projeto vive em **um único repositório** dividido em três pacotes:
 
 ```
-academia/                        ← raiz do repositório
+sistema_academia/                        ← raiz do repositório
 │
 ├── client/                      ← Frontend (React)
 ├── server/                      ← Backend (Node.js + Express)

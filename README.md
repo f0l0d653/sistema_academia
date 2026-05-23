@@ -17,7 +17,9 @@
 </div>
 
 <!-- LAST_UPDATE_START -->
-> 🕐 **Última atualização:** — *(atualizado automaticamente pelo GitHub Actions a cada push)*
+
+> 🕐 **Última atualização:** — _(atualizado automaticamente pelo GitHub Actions a cada push)_
+
 <!-- LAST_UPDATE_END -->
 
 ---
@@ -62,30 +64,36 @@ O **Academia DevSquad** é um sistema web completo para gestão de academias, de
 <!--✅-->
 
 #### 🔜 Autenticação e Segurança
+
 - Login com JWT
 - Rotas protegidas por middleware
 - Controle de acesso por papel (`ADMIN`, `STAFF`)
 
 #### 🔜 Cadastro de Clientes
+
 - Inclusão e edição de dados pessoais (nome, CPF, e-mail, telefone)
 - Vínculo a um plano de assinatura ativo
 - Listagem com filtros por nome e status
 
 #### 🔜 Gestão de Planos
+
 - Criação e configuração de planos (mensal, trimestral, anual)
 - Cupons de desconto e promoções sazonais
 
 #### 🔜 Controle Financeiro
+
 - Lançamento de pagamentos com atualização automática de status
 - Fluxo de caixa diário: abertura, movimentações e fechamento
 - Registro de despesas operacionais
 
 #### 🔜 Controle de Inadimplência
+
 - Verificação automática de vencimentos
 - Alertas ao staff sobre clientes em atraso
 - Bloqueio e desbloqueio de acesso
 
 #### 🔜 Relatórios _(fase 2)_
+
 - Faturamento por período
 - Inadimplência com valor total em aberto
 - Exportação para CSV/PDF
@@ -94,15 +102,15 @@ O **Academia DevSquad** é um sistema web completo para gestão de academias, de
 
 ### Tecnologias
 
-| Camada | Tecnologia | Descrição |
-|:---|:---|:---|
-| **Frontend** | React 18 + JavaScript | Interface moderna e responsiva |
-| **Backend** | Node.js 20 + Express 4 | API REST robusta e escalável |
-| **Banco de dados** | PostgreSQL 15 | Banco relacional com suporte a transações |
-| **ORM** | Prisma | Acesso a dados com migrations automáticas |
-| **Autenticação** | JWT | Tokens seguros para sessões |
-| **CI/CD** | GitHub Actions | Pipeline automatizado de testes |
-| **Testes** | Jest | Testes unitários e de integração |
+| Camada             | Tecnologia             | Descrição                                 |
+| :----------------- | :--------------------- | :---------------------------------------- |
+| **Frontend**       | React 18 + JavaScript  | Interface moderna e responsiva            |
+| **Backend**        | Node.js 20 + Express 4 | API REST robusta e escalável              |
+| **Banco de dados** | PostgreSQL 15          | Banco relacional com suporte a transações |
+| **ORM**            | Prisma                 | Acesso a dados com migrations automáticas |
+| **Autenticação**   | JWT                    | Tokens seguros para sessões               |
+| **CI/CD**          | GitHub Actions         | Pipeline automatizado de testes           |
+| **Testes**         | Jest                   | Testes unitários e de integração          |
 
 ---
 
@@ -162,7 +170,7 @@ Acesse `http://localhost:3000/status` para verificar se a API está saudável.
 O projeto é um **monorepo** com dois pacotes independentes. A raiz contém apenas configurações e scripts que orquestram os dois juntos.
 
 ```
-academia/                            ← raiz do repositório
+sistema_academia/                            ← raiz do repositório
 ├── client/                          ← Frontend (React)
 ├── server/                          ← Backend (Node.js + Express)
 ├── .github/
@@ -347,7 +355,9 @@ Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações
 ### 👥 Contributors
 
 <!-- CONTRIBUTORS_START -->
-*(lista atualizada automaticamente pelo GitHub Actions)*
+
+_(lista atualizada automaticamente pelo GitHub Actions)_
+
 <!-- CONTRIBUTORS_END -->
 
 ---
@@ -396,30 +406,36 @@ A gym management system with financial control, automated delinquency handling a
 <!--✅-->
 
 #### 🔜 Authentication & Security
+
 - JWT-based login
 - Route protection via middleware
 - Role-based access control (`ADMIN`, `STAFF`)
 
 #### 🔜 Member Management
+
 - Create and edit member profiles (name, CPF, email, phone)
 - Link to an active subscription plan
 - List with filters by name and status
 
 #### 🔜 Plan Management
+
 - Create and configure plans (monthly, quarterly, annual)
 - Discount coupons and seasonal promotions
 
 #### 🔜 Financial Control
+
 - Payment registration with automatic status update
 - Daily cash register: open, transactions and close
 - Operational expense tracking
 
 #### 🔜 Delinquency Control
+
 - Automatic due date verification
 - Staff alerts for overdue members
 - Access blocking and unblocking
 
 #### 🔜 Reports _(phase 2)_
+
 - Revenue by period
 - Delinquency with total outstanding amount
 - CSV/PDF export
@@ -428,15 +444,15 @@ A gym management system with financial control, automated delinquency handling a
 
 ### Tech Stack
 
-| Layer | Technology | Description |
-|:---|:---|:---|
-| **Frontend** | React 18 + JavaScript | Modern, responsive UI |
-| **Backend** | Node.js 20 + Express 4 | Robust and scalable REST API |
-| **Database** | PostgreSQL 15 | Relational DB with transaction support |
-| **ORM** | Prisma | Type-safe data access with auto migrations |
-| **Auth** | JWT | Secure session tokens |
-| **CI/CD** | GitHub Actions | Automated test pipeline |
-| **Testing** | Jest | Unit and integration tests |
+| Layer        | Technology             | Description                                |
+| :----------- | :--------------------- | :----------------------------------------- |
+| **Frontend** | React 18 + JavaScript  | Modern, responsive UI                      |
+| **Backend**  | Node.js 20 + Express 4 | Robust and scalable REST API               |
+| **Database** | PostgreSQL 15          | Relational DB with transaction support     |
+| **ORM**      | Prisma                 | Type-safe data access with auto migrations |
+| **Auth**     | JWT                    | Secure session tokens                      |
+| **CI/CD**    | GitHub Actions         | Automated test pipeline                    |
+| **Testing**  | Jest                   | Unit and integration tests                 |
 
 ---
 
@@ -496,7 +512,7 @@ Visit `http://localhost:3000/status` to check the API health.
 The project is a **monorepo** with two independent packages. The root only holds configs and scripts that orchestrate both together.
 
 ```
-academia/                            ← repository root
+sistema_academia/                            ← repository root
 ├── client/                          ← Frontend (React)
 ├── server/                          ← Backend (Node.js + Express)
 ├── .github/

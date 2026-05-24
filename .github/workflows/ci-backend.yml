@@ -1,0 +1,50 @@
+name: Node.js CI (DevSquad Pipeline)
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  test-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Copiar código do repositório
+      uses: actions/checkout@v4
+
+    - name: 🟢 Configurar o ambiente Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Versão estável do Node
+        cache: 'npm'
+
+    - name: 📦 Instalar as dependências globais, front e server
+      run: |
+        npm run install:all
+
+    - name: ⚙️ Copiar e configurar os arquivos dotenv para a CI
+      run: |
+        # 1. Copia o exemplo do frontend para o arquivo de desenvolvimento do React/Vite
+        cp client/.env.example client/.env.development
+        
+        # 2. Copia o exemplo do backend para criar a base do arquivo de desenvolvimento
+        cp server/.env.example server/.env.development
+        
+        # 3. Garante que a DATABASE_URL aponte para o banco isolado de teste da CI
+        echo "DATABASE_URL=\"file:./prisma/ci.db\"" >> server/.env.development
+
+    - name: 🗄️ Validar e aplicar as Migrations do Prisma
+      run: |
+        cd server
+        npx prisma migrate dev --name init --skip-generate
+
+    - name: 🌱 Testar a semeadura do banco (Seed)
+      run: |
+        cd server
+        npx prisma db seed
+
+    - name: 🚀 Executar o Lint global (Validação de padrões)
+      run: |
+        npm run lint

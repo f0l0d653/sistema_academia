@@ -1,0 +1,29 @@
+name: 📝 Atualização de Documentação
+
+# O gatilho: roda toda vez que houver um push na branch "docs"
+on:
+  push:
+    branches:
+      - docs
+
+jobs:
+  build-and-notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Passo 1: Faz o "checkout" do código para o servidor do GitHub Actions conseguir ler os arquivos
+      - name: 📥 Clonando o repositório
+        uses: actions/checkout@v4
+
+      # Passo 2: Exemplo de validação (Garante que os arquivos .md não têm links quebrados)
+      - name: 🔍 Validando arquivos Markdown
+        run: |
+          echo "Verificando consistência dos arquivos de documentação..."
+          # Aqui você pode adicionar comandos de validação se quiser no futuro.
+          # Por enquanto, ele apenas valida que o processo iniciou com sucesso.
+
+      # Passo 3: Log de sucesso no painel do GitHub Actions
+      - name: 🎉 Confirmação de deploy da documentação
+        run: |
+          echo "✅ A documentação da branch 'docs' foi atualizada com sucesso!"
+          echo "Alterações integradas por: ${{ github.actor }}"

@@ -1,0 +1,91 @@
+name: 🚀 CI - Integração Contínua (DevSquad)
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  # ----------------------------------------------------
+  # JOB 1: Validação e Build do Frontend (Client)
+  # ----------------------------------------------------
+  frontend-pipeline:
+    name: 💻 Frontend (Client)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonando o repositório
+        uses: actions/checkout@v4
+
+      - name: 🟢 Lendo a versão do Node.js do .nvmrc
+        id: nvm
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: 🛠️ Configurando ambiente Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: 📦 Instalar dependências do Frontend
+        run: |
+          cd client
+          npm ci
+
+      - name: 🔍 Rodar o Linter (Análise estática de código)
+        run: |
+          cd client
+          # Roda o linter e avisa se tiver variáveis soltas ou código fora do padrão
+          npm run lint --if-present
+
+      - name: 🧪 Executar Testes Unitários/Integração
+        run: |
+          cd client
+          npm test -- --watchAll=false --passWithNoTests
+
+      - name: 🏗️ Validar compilação (Build de Produção)
+        run: |
+          cd client
+          npm run build
+
+  # ----------------------------------------------------
+  # JOB 2: Validação e Build do Backend (Server)
+  # ----------------------------------------------------
+  backend-pipeline:
+    name: ⚙️ Backend (Server)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonando o repositório
+        uses: actions/checkout@v4
+
+      - name: 🟢 Lendo a versão do Node.js do .nvmrc
+        id: nvm
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: 🛠️ Configurando ambiente Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: 📦 Instalar dependências do Backend
+        run: |
+          cd server
+          npm ci
+
+      - name: 🔍 Rodar o Linter do Backend
+        run: |
+          cd server
+          npm run lint --if-present
+
+      - name: 🧪 Executar Testes do Backend
+        run: |
+          cd server
+          npm test --if-present
+
+# Nota: O uso de "npm ci" em vez de "npm install" é uma boa prática em CI, 
+# pois ele instala as versões exatas do package-lock.json de forma mais rápida e limpa.
